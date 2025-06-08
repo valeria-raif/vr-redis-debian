@@ -82,12 +82,12 @@ jobs:
           esac
 
           echo "BUILD_ARCH=${BUILD_ARCH}" >> $GITHUB_ENV
-    - name: Setup APT Signing key
-      run: |
-          mkdir -m 0700 -p ~/.gnupg
-          echo "$APT_SIGNING_KEY" | gpg --import
-      env:
-        APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+#    - name: Setup APT Signing key
+#      run: |
+#          mkdir -m 0700 -p ~/.gnupg
+#          echo "$APT_SIGNING_KEY" | gpg --import
+#      env:
+#        APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
     - name: Install dependencies
       run: |
           sudo apt-get update && \
@@ -106,6 +106,7 @@ jobs:
           sudo sbuild \
             --nolog \
             --no-run-lintian \
+            --no-sign \
             --host ${{ matrix.arch }} \
             --build ${{ env.BUILD_ARCH }} \
             --dist ${{ matrix.dist }} \
