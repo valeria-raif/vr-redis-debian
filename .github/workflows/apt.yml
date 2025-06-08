@@ -1,4 +1,4 @@
-name: Build and Test Redis Unstable
+name: Build and Test APT unstable
 
 on:
   pull_request:
@@ -9,22 +9,15 @@ on:
     - unstable
   workflow_call:
 
-# Define local variables
-env:
-  BUILD_DISTS: '["noble", "jammy", "focal", "bookworm"]'
-  BUILD_ARCHS: '["i386", "amd64", "arm64", "armhf"]'
-  BUILD_EXCLUDE: '[{"dist":"noble", "arch":"i386"}, {"dist":"jammy", "arch":"i386"}, {"dist":"focal", "arch":"i386"}]'
-  SMOKE_TEST_IMAGES: '["ubuntu:noble", "ubuntu:jammy", "ubuntu:focal", "debian:bookworm"]'
-
 jobs:
   build-source-package:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        dist: ${{ fromJSON(env.BUILD_DISTS) }}
-        arch: ${{ fromJSON(env.BUILD_ARCHS) }}
-        exclude: ${{ fromJSON(env.BUILD_EXCLUDE) }}
+        dist: ${{ fromJSON(vars.BUILD_DISTS) }}
+        arch: ${{ fromJSON(vars.BUILD_ARCHS) }}
+        exclude: ${{ fromJSON(vars.BUILD_EXCLUDE) }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -63,9 +56,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dist: ${{ fromJSON(env.BUILD_DISTS) }}
-        arch: ${{ fromJSON(env.BUILD_ARCHS) }}
-        exclude: ${{ fromJSON(env.BUILD_EXCLUDE) }}
+        dist: ${{ fromJSON(vars.BUILD_DISTS) }}
+        arch: ${{ fromJSON(vars.BUILD_ARCHS) }}
+        exclude: ${{ fromJSON(vars.BUILD_EXCLUDE) }}
     needs: build-source-package
     steps:
     - uses: actions/checkout@v4
@@ -132,7 +125,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ${{ fromJSON(env.SMOKE_TEST_IMAGES) }}
+        image: ${{ fromJSON(vars.SMOKE_TEST_IMAGES) }}
         arch: [amd64, arm64]
     container: ${{ matrix.image }}
     steps:
