@@ -106,8 +106,6 @@ jobs:
           sudo sbuild \
             --nolog \
             --no-run-lintian \
-            --no-sign-buildd \
-            --no-sign-changes \
             --host ${{ matrix.arch }} \
             --build ${{ env.BUILD_ARCH }} \
             --dist ${{ matrix.dist }} \
