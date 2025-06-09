@@ -39,6 +39,12 @@ jobs:
         mkdir -p redis-${VERSION}
         tar --extract --gunzip --file redis_${VERSION}.orig.tar.gz --strip-components=1 -C redis-${VERSION}
         sed -i 's/INSTALL_BIN=\$(PREFIX)\/bin/INSTALL_BIN=\$(DESTDIR)\$(PREFIX)\/bin/' redis-${VERSION}/src/Makefile
+        
+        # Update all module versions to 'master'
+        find redis-${VERSION}/modules -name "Makefile" -type f | while read -r makefile; do
+          sed -i 's/MODULE_VERSION = .*/MODULE_VERSION = master/g' "$makefile"
+        done
+        
         cp -pr debian redis-${VERSION}
         sed -i "s/@RELEASE@/${{ matrix.dist }}/g" redis-${VERSION}/debian/changelog
         ( cd redis-${VERSION} && dpkg-buildpackage -S )
