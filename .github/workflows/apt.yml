@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: RED-159764-build-unstable # replace with unstable when ready
+        ref: unstable
     - name: Install dependencies
       run: |
           sudo apt-get update && \
