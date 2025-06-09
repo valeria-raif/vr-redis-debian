@@ -1,4 +1,4 @@
-name: Create unstable source package
+name: Create source package and upload to Launchpad
 
 on:
   push:
@@ -37,4 +37,6 @@ jobs:
           done
       env:
         RELEASES: "jammy bionic focal hirsute"
-
+    - name: Upload source packages
+      run: |
+          dput ppa:redislabs/redis */*.changes
